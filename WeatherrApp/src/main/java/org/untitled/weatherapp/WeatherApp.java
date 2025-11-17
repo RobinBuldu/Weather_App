@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,8 @@ public class WeatherApp extends Application {
         cityCombo = new ComboBox<>();
         cityCombo.getItems().addAll(cityData.keySet());
         cityCombo.setValue("Cairo");
+        Button refreshBtn = new Button("Refresh");
+        refreshBtn.setOnAction(e -> updateWeather());
 
         cityLabel = new Label("Cairo");
         cityLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
@@ -41,14 +44,12 @@ public class WeatherApp extends Application {
         weatherImage.setFitHeight(100);
         weatherImage.setFitWidth(100);
 
-        Button refreshBtn = new Button("Refresh");
-        refreshBtn.setOnAction(e -> updateWeather());
 
 
         BorderPane root = new BorderPane();
-        VBox centerBox  = new VBox(15, cityCombo, cityLabel, weatherImage, tempLabel, refreshBtn);
-        centerBox.setAlignment(Pos.CENTER);
-        centerBox.setStyle("-fx-padding: 20;");
+        VBox content  = new VBox(15, cityCombo, refreshBtn, cityLabel, tempLabel, weatherImage);
+        content.setAlignment(Pos.CENTER);
+        content.setStyle("-fx-padding: 20;");
 
         MenuBar menuBar = new MenuBar();
         Menu menu = new Menu("Menu");
@@ -60,12 +61,12 @@ public class WeatherApp extends Application {
         menuBar.getMenus().add(menu);
 
         root.setTop(menuBar);
-        root.setCenter(centerBox);
+        root.setTop(content);
 
         cityCombo.setOnAction(e -> updateWeather());
         updateWeather();
 
-        Scene scene = new Scene(root, 300, 400);
+        Scene scene = new Scene(root, 300, 300);
         primaryStage.setTitle("Weather App");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -80,16 +81,16 @@ public class WeatherApp extends Application {
             tempLabel.setText(data.temp + " °C");
             switch (data.weather.toLowerCase()) {
                 case "sunny":
-                    weatherImage.setImage(new Image(getClass().getResourceAsStream("/img/sunny.png")));
+                    weatherImage.setImage(new Image(getClass().getResourceAsStream("/img/sun.png")));
                     break;
                 case "rainy":
-                    weatherImage.setImage(new Image(getClass().getResourceAsStream("/img/rainy.png")));
+                    weatherImage.setImage(new Image(getClass().getResourceAsStream("/img/protection.png")));
                     break;
                 case "stormy":
-                    weatherImage.setImage(new Image(getClass().getResourceAsStream("/img/stormy.png")));
+                    weatherImage.setImage(new Image(getClass().getResourceAsStream("/img/lightening.png")));
                     break;
                 default:
-                    weatherImage.setImage(new Image(getClass().getResourceAsStream("/img/sunny.png")));
+                    weatherImage.setImage(new Image(getClass().getResourceAsStream("/img/sun.png")));
                     break;
             }
         }
@@ -103,6 +104,7 @@ public class WeatherApp extends Application {
             this.city = city;
             this.temp = temp;
             this.weather = weather;
-        }
-    }
+        }
+    }
 }
+
